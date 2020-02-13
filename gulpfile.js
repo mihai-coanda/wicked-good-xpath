@@ -35,48 +35,62 @@ var closureCompiler = require('google-closure-compiler').gulp();
 
 gulp.task('compile', function() {
   return gulp.src([
-          'src/*.js',
-          '!src/*_test.js',
-          'node_modules/google-closure-library/closure/**/*.js',
-          '!node_modules/google-closure-library/closure/**/*_test.js'
-      ])
-      .pipe(closureCompiler({
-        assume_function_wrapper: true,
+      'src/*.js',
+      '!src/*_test.js',
+      'node_modules/google-closure-library/closure/**/*.js',
+      '!node_modules/google-closure-library/closure/**/*_test.js'
+    ])
+    .pipe(closureCompiler({
+      assume_function_wrapper: true,
         compilation_level: 'ADVANCED',
-        dependency_mode: 'STRICT',
-        entry_point: 'goog:wgxpath',
-        language_in: 'ES6_STRICT',
-        language_out: 'ES5_STRICT',
-        js_output_file: 'wgxpath.install.js',
-        output_wrapper: '(function(){%output%}).call(this)',
-        use_types_for_optimization: true,
-        warning_level: 'VERBOSE'
-      }))
-      .pipe(gulp.dest('./dist'));
+      dependency_mode: 'STRICT',
+      entry_point: 'goog:wgxpath',
+      language_in: 'ES6_STRICT',
+      language_out: 'ES5_STRICT',
+      js_output_file: 'wgxpath.install.js',
+      output_wrapper: '(function(){%output%}).call(this)',
+      use_types_for_optimization: true,
+      warning_level: 'VERBOSE'
+    }))
+    .pipe(gulp.dest('./dist'));
 });
 
 gulp.task('compile-node', function() {
   return gulp.src([
-          'src/*.js',
-          '!src/*_test.js',
-          '!src/nodeModuleExterns.js',
-          'node_modules/google-closure-library/closure/**/*.js',
-          '!node_modules/google-closure-library/closure/**/*_test.js',
-      ])
-      .pipe(closureCompiler({
-        assume_function_wrapper: true,
-        compilation_level: 'ADVANCED',
-        dependency_mode: 'STRICT',
-        entry_point: 'goog:wgxpath.nodeModuleExports',
-        externs: 'src/nodeModuleExterns.js',
-        language_in: 'ES6_STRICT',
-        language_out: 'ES5_STRICT',
-        js_output_file: 'wgxpath.install-node.js',
-        output_wrapper: '(function(){%output%}).call(global)',
-        use_types_for_optimization: true,
-        warning_level: 'VERBOSE'
-      }))
-      .pipe(gulp.dest('./dist'));
+      'src/*.js',
+      '!src/*_test.js',
+      '!src/nodeModuleExterns.js',
+      'node_modules/google-closure-library/closure/**/*.js',
+      '!node_modules/google-closure-library/closure/**/*_test.js',
+    ])
+    .pipe(closureCompiler({
+      assume_function_wrapper: true,
+      compilation_level: 'ADVANCED',
+      dependency_mode: 'STRICT',
+      entry_point: 'goog:wgxpath.nodeModuleExports',
+      externs: 'src/nodeModuleExterns.js',
+      language_in: 'ES6_STRICT',
+      language_out: 'ES5_STRICT',
+      js_output_file: 'wgxpath.install-node.js',
+      output_wrapper: '(function(){%output%}).call(global)',
+      use_types_for_optimization: true,
+      warning_level: 'VERBOSE'
+    }))
+    .pipe(gulp.dest('./dist'));
 });
 
-gulp.task('default', ['compile', 'compile-node']);
+
+// Create the closure dependency file.
+var closureDeps = require('gulp-closure-deps');
+gulp.task('closure-deps', function closureDepsTask() {
+  return gulp.src(['src/**/*.js'])
+    .pipe(closureDeps({
+      fileName: 'sync-deps.js',
+      prefix: '../../../../',
+      baseDir: ''
+    }))
+    .pipe(gulp.dest(''));
+});
+
+
+gulp.task('default', ['compile', 'closure-deps']);

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Xpath test</title>
+  <script type="text/javascript" src="node_modules/google-closure-library/closure/goog/base.js"></script>
+  <script type="text/javascript" src="sync-deps.js"></script>
+  <script type="text/javascript">
+
+    goog.require('wgxpath');
+
+    // force the install of the library over the native implementation.
+    setTimeout(function() {
+      wgxpath.install(null, true);
+    }, 1000);
+  </script>
+
+</head>
+<body>
+
+<div id="root">
+  <div>
+    <span id="test">ana are mere</span>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,2 +1,4 @@
 node_modules/
 wgxpath.install.js
+sync-deps.js
+package-lock.json
